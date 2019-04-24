@@ -36,3 +36,8 @@ exports.onListening = (server) => {
         console.log(`Listening at ${bind}...`);
     };
 };
+exports.handleError = (error) => {
+    let errorMsg = `${error.name}: ${error.message}`;
+    console.log(errorMsg);
+    return Promise.reject(new Error(errorMsg));
+};

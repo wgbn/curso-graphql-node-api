@@ -54,11 +54,18 @@ export default (sequelize: Sequelize.Sequelize, dataTypes: Sequelize.DataTypes):
             beforeCreate: (user: IUserInstance, options: Sequelize.CreateOptions) => {
                 const salt = genSaltSync();
                 user.password = hashSync(user. password, salt);
+            },
+
+            beforeUpdate: (user: IUserInstance, options: Sequelize.CreateOptions) => {
+                if (user.changed('password')) {
+                    const salt = genSaltSync();
+                    user.password = hashSync(user. password, salt);
+                }
             }
         }
     });
 
-    // user.associate = (models: IModels) => {}; 
+    // user.associate = (models: IModels) => {};
 
     user.prototype.isPassword = (encodedPassword: string, password: string): boolean => compareSync(password, encodedPassword);
 

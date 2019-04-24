@@ -1,43 +1,30 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const graphql_tools_1 = require("graphql-tools");
-const users = [
-    { id: 1, name: 'Theo', email: 'theo@wgbn.com.br' },
-    { id: 2, name: 'Dhully', email: 'dhully@wgbn.com.br' },
-];
-const typeDefs = `
-    type User {
-        id: ID!
-        name: String!
-        email: String!
-    }
-
-    type Query {
-        allUsers: [User!]!
-    }
-
-    type Mutation {
-        createUser(name: String!, email: String!): User
+const query_1 = require("./query");
+const lodash_1 = require("lodash");
+const mutation_1 = require("./mutation");
+const user_schema_1 = require("./resources/user/user.schema");
+const post_schema_1 = require("./resources/post/post.schema");
+const comment_schema_1 = require("./resources/comment/comment.schema");
+const user_resolvers_1 = require("./resources/user/user.resolvers");
+const post_resolvers_1 = require("./resources/post/post.resolvers");
+const comment_resolvers_1 = require("./resources/comment/comment.resolvers");
+const resolvers = lodash_1.merge(user_resolvers_1.userResolvers, post_resolvers_1.postResolvers, comment_resolvers_1.commentResolvers);
+const schemaDefinition = `
+    type Schema {
+        query: Query
+        mutation: Mutation
     }
 `;
-const resolvers = {
-    // resolver trivial (cria um resolver pra cada atributo do tipo)
-    User: {
-        id: user => user.id,
-        name: user => `Meu nome é ${user.name}`
-    },
-    // resolvers padrao
-    // queries
-    Query: {
-        allUsers: () => users
-    },
-    // mutations
-    Mutation: {
-        createUser: (parent, args, context, info) => {
-            const newUser = Object.assign({}, args, { id: users.length + 1 });
-            users.push(newUser);
-            return newUser;
-        }
-    }
-};
-exports.default = graphql_tools_1.makeExecutableSchema({ typeDefs, resolvers });
+exports.default = graphql_tools_1.makeExecutableSchema({
+    typeDefs: [
+        schemaDefinition,
+        query_1.Query,
+        mutation_1.Mutation,
+        comment_schema_1.commentTypes,
+        post_schema_1.postTypes,
+        user_schema_1.userTypes
+    ],
+    resolvers
+});

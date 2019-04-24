@@ -36,10 +36,16 @@ exports.default = (sequelize, dataTypes) => {
             beforeCreate: (user, options) => {
                 const salt = bcryptjs_1.genSaltSync();
                 user.password = bcryptjs_1.hashSync(user.password, salt);
+            },
+            beforeUpdate: (user, options) => {
+                if (user.changed('password')) {
+                    const salt = bcryptjs_1.genSaltSync();
+                    user.password = bcryptjs_1.hashSync(user.password, salt);
+                }
             }
         }
     });
-    // user.associate = (models: IModels) => {}; 
+    // user.associate = (models: IModels) => {};
     user.prototype.isPassword = (encodedPassword, password) => bcryptjs_1.compareSync(password, encodedPassword);
     return user;
 };
