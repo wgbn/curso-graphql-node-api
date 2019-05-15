@@ -40,3 +40,5 @@ export const handleError = (error: Error) => {
     console.log(errorMsg);
     return Promise.reject(new Error(errorMsg));
 };
+
+export const JWT_SECRET: string = process.env.JWT_SECRET;

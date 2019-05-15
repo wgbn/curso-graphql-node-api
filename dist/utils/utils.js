@@ -41,3 +41,4 @@ exports.handleError = (error) => {
     console.log(errorMsg);
     return Promise.reject(new Error(errorMsg));
 };
+exports.JWT_SECRET = process.env.JWT_SECRET;
